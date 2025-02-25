@@ -1,0 +1,36 @@
+name: Deploy Lambda to S3
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Server/**"  # Trigger only if server folder changes
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install AWS CLI
+        run: sudo apt-get install -y awscli
+
+      - name: Delete Previous Zip from S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "ap-south-1"
+          S3_BUCKET: "tanseer-github-actions-test-s3-bucket"
+        run: aws s3 rm s3://$S3_BUCKET/lambda_function.zip || echo "No previous zip found, continuing..."
+
+      - name: Zip the Server Folder
+        run: |
+          cd server
+          zip -r ../lambda_function.zip .  
+          cd ..
+
+      - name: Upload New Zip to S3
+        run: aws s3 cp lambda_function.zip s3://$S3_BUCKET/lambda_function.zip
