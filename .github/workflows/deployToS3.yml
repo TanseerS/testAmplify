@@ -36,4 +36,9 @@ jobs:
           cd ..
 
       - name: Upload New Zip to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "ap-south-1"
+          S3_BUCKET: "tanseer-github-actions-test-s3-bucket"
         run: aws s3 cp lambda_function.zip s3://$S3_BUCKET/lambda_function.zip
