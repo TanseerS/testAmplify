@@ -23,7 +23,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Zip the Server Folder
-        run: cd Server && zip -r lambda_function.zip
+        run: |
+          cd Server
+          zip -r ../lambda_function.zip .
 
       - name: Upload New Zip to S3
         run: aws s3 cp lambda_function.zip s3://$S3_BUCKET/lambda_function.zip
