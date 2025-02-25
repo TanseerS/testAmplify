@@ -4,8 +4,9 @@ on:
   push:
     branches:
       - main
+      - dev
     paths:
-      - "Server/**"  # Trigger only if server folder changes
+      - "Server/**" # Trigger only if server folder changes
 
 jobs:
   deploy:
